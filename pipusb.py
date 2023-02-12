@@ -21,10 +21,12 @@ def list_devices():
 def play_sound(sound):
   playsound(sound)
 
-def notification(text, sound):
+def notification(text, sound, icon):
   notification = Notify(default_application_name="pipusb")
   notification.title = text
   notification.audio = sound
+  notification.icon = icon
+  notification.message = ""
   notification.send()
 
 # Main function
@@ -51,17 +53,17 @@ def main():
   
   old_devices = list_devices()
   while True:
-    time.sleep(0.01)
+    time.sleep(0.1)
     new_devices = list_devices()
     if new_devices > old_devices:
       if args.notification:
-        notification("USB Connected", args.input)
+        notification("USB Connected", args.input, './default/default_USB.png')
       else:
         play_sound(args.input)
 
     if new_devices < old_devices:
       if args.notification:
-        notification("USB Disconnected", args.output)
+        notification("USB Disconnected", args.output, './default/default_USB.png')
       else:
         play_sound(args.output)
 
@@ -69,7 +71,10 @@ def main():
       battery = psutil.sensors_battery()
       power = battery.power_plugged
       if power:
-        play_sound(args.input)
+        if args.notification:
+          notification("Charger Connected", args.input, './default/default_charger.png')
+        else:
+          play_sound(args.input)
     old_devices = new_devices
 
 # Check script main
