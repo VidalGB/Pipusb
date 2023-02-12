@@ -37,10 +37,10 @@ def main():
   parser.add_argument('-v', '--version', action = 'version', version = '%(prog)s 1.0', help = "show program's version number and exit.")
 
 # Input sound
-  parser.add_argument("-i","--input", type = str, default = './default/input_sound.mp3', help = "file to play when inserting USB. (only .wav files are supported)")
+  parser.add_argument("-i","--input", type = str, default = './default/default_sound.wav', help = "file to play when inserting USB. (only .wav files are supported)")
 
 # Output sound
-  parser.add_argument("-o", "--output", type = str, default = './default/input_sound.mp3', help = "file to play when removing USB. (only .wav files are supported)")
+  parser.add_argument("-o", "--output", type = str, default = './default/default_sound.wav', help = "file to play when removing USB. (only .wav files are supported)")
 
 # dee
   parser.add_argument("-c", "--charger", action = 'store_true', help = 'detect charger.')
