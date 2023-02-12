@@ -62,7 +62,6 @@ def main():
   while True:
     time.sleep(0.01)
     new_devices = list_devices()
-    print(new_devices[0], old_devices[0])
     if new_devices[0] > old_devices[0]:
       play_sound(args.input)
     if new_devices[0] < old_devices[0]:
@@ -73,7 +72,6 @@ def main():
       if power:
         play_sound(args.input)
     old_devices = new_devices
-
 
 # Check script main
 if __name__ == '__main__':
