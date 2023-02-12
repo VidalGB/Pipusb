@@ -1,33 +1,35 @@
 # Python v3.9.2 more information and dependencies, read requirements.txt
-# Syntax camelCase
+#0 Syntax camelCase
 
 # Imports
 import argparse
-import usb
 from playsound import playsound
-import psutil
-import time
+from psutil import sensors_battery
+from time import sleep
 from notifypy import Notify
+from usb import busses
+from sys import stdout, exit
+
 
 def list_devices():
-  busses = usb.busses()
+  list_busses = busses()
   num_dev = int()
-  for bus in busses:
+  for bus in list_busses:
     devices = bus.devices
     num_dev = len(devices) + num_dev
 
   return num_dev
 
-def play_sound(sound):
-  playsound(sound)
-
-def notification(text, sound, icon):
-  notification = Notify(default_application_name="pipusb")
-  notification.title = text
-  notification.audio = sound
-  notification.icon = icon
-  notification.message = ""
-  notification.send()
+def notification(text, sound, icon, noti):
+  if noti:
+    notification = Notify(default_application_name="pipusb")
+    notification.title = text
+    notification.audio = sound
+    notification.icon = icon
+    notification.message = ""
+    notification.send()
+  else:
+    playsound(sound)
 
 # Main function
 def main():
@@ -52,30 +54,36 @@ def main():
   args = parser.parse_args()
   
   old_devices = list_devices()
-  while True:
-    time.sleep(0.1)
-    new_devices = list_devices()
-    if new_devices > old_devices:
-      if args.notification:
-        notification("USB Connected", args.input, './default/default_USB.png')
-      else:
-        play_sound(args.input)
+  flag_battery = True
+  try:
+    while True:
+      sleep(0.1)
+      new_devices = list_devices()
 
-    if new_devices < old_devices:
-      if args.notification:
-        notification("USB Disconnected", args.output, './default/default_USB.png')
-      else:
-        play_sound(args.output)
+      if new_devices > old_devices:
+        notification("USB Connected", args.input, './default/default_USB.png', args.notification)
 
-    if args.charger:
-      battery = psutil.sensors_battery()
-      power = battery.power_plugged
-      if power:
-        if args.notification:
-          notification("Charger Connected", args.input, './default/default_charger.png')
-        else:
-          play_sound(args.input)
-    old_devices = new_devices
+      if new_devices < old_devices:
+        notification("USB Disconnected", args.output, './default/default_USB.png', args.notification)
+
+      if args.charger:
+        battery = sensors_battery()
+        power = battery.power_plugged
+        
+        if power and flag_battery:
+          flag_battery = False
+          notification("Charger Connected", args.input, './default/default_charger.png', args.notification)
+
+        if not power and not flag_battery:
+          flag_battery = True
+
+      old_devices = new_devices
+  except KeyboardInterrupt:
+    stdout.write('\npipusb was canceled by user\n')
+    exit()
+  except Exception as e:
+    stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
+    exit()
 
 # Check script main
 if __name__ == '__main__':
