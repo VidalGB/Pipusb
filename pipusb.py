@@ -6,6 +6,8 @@ import argparse
 import sys
 import usb
 from playsound import playsound
+import psutil
+import time
 
 def ensambler_id(*args):
   parts = list()
@@ -57,6 +59,21 @@ def main():
   args = parser.parse_args()
   
   old_devices = list_devices()
+  while True:
+    time.sleep(0.01)
+    new_devices = list_devices()
+    print(new_devices[0], old_devices[0])
+    if new_devices[0] > old_devices[0]:
+      play_sound(args.input)
+    if new_devices[0] < old_devices[0]:
+      play_sound(args.output)
+    if args.energize:
+      battery = psutil.sensors_battery()
+      power = battery.power_plugged
+      if power:
+        play_sound(args.input)
+    old_devices = new_devices
+
 
 # Check script main
 if __name__ == '__main__':
