@@ -20,13 +20,14 @@ def list_devices():
 
   return num_dev
 
-def notification(text, sound, icon, noti):
+def notification(text, noti, sound="", icon="", msg=""):
   if noti:
     notification = Notify(default_application_name="pipusb")
     notification.title = text
-    notification.audio = sound
+    if sound != "":
+      notification.audio = sound
     notification.icon = icon
-    notification.message = ""
+    notification.message = msg
     notification.send()
   else:
     song = AudioSegment.from_wav(sound)
@@ -62,10 +63,10 @@ def main():
       new_devices = list_devices()
 
       if new_devices > old_devices:
-        notification("USB Connected", args.input, './default/default_USB.png', args.notification)
+        notification("USB Connected", args.notification, args.input, './default/default_USB.png')
 
       if new_devices < old_devices:
-        notification("USB Disconnected", args.output, './default/default_USB.png', args.notification)
+        notification("USB Disconnected", args.notification, args.output, './default/default_USB.png')
 
       if args.charger:
         battery = sensors_battery()
@@ -73,17 +74,23 @@ def main():
         
         if power and flag_battery:
           flag_battery = False
-          notification("Charger Connected", args.input, './default/default_charger.png', args.notification)
+          notification("Charger Connected", args.notification, args.input, './default/default_charger.png')
 
         if not power and not flag_battery:
           flag_battery = True
 
       old_devices = new_devices
   except KeyboardInterrupt:
-    stdout.write('\npipusb was canceled by user\n')
+    if args.notification:
+      notification("pipusb was canceled by user", args.notification)
+    else:
+      stdout.write('\npipusb was canceled by user\n')
     exit()
   except Exception as e:
-    stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
+    if args.notification:
+      notification('An unexpected error has occurred, please notify the developer.', args.notification, msg=f'Error > {e}')
+    else:
+      stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
     exit()
 
 # Check script main
