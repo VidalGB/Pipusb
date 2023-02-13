@@ -3,13 +3,13 @@
 
 # Imports
 import argparse
-from playsound import playsound
-from psutil import sensors_battery
 from time import sleep
+from sys import stdout, exit
 from notifypy import Notify
 from usb import busses
-from sys import stdout, exit
-
+from psutil import sensors_battery
+from pydub import AudioSegment
+from pydub.playback import play
 
 def list_devices():
   list_busses = busses()
@@ -29,7 +29,8 @@ def notification(text, sound, icon, noti):
     notification.message = ""
     notification.send()
   else:
-    playsound(sound)
+    song = AudioSegment.from_wav(sound)
+    play(song)
 
 # Main function
 def main():
