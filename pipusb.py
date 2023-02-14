@@ -57,6 +57,17 @@ def main():
   
   old_devices = list_devices()
   flag_battery = True
+
+  list_input = args.input.split('.')
+  list_output = args.output.split('.')
+  
+  if list_input[-1] == "wav" or list_output[-1] == "wav":
+    if args.notification:
+      notification('file not supported, ".wav" files only', args.notification)
+    else:
+      stdout.write('file not supported, ".wav" files only\n')
+    exit()
+    
   try:
     while True:
       sleep(0.1)
@@ -80,18 +91,21 @@ def main():
           flag_battery = True
 
       old_devices = new_devices
+      
   except KeyboardInterrupt:
     if args.notification:
       notification("pipusb was canceled by user", args.notification)
     else:
       stdout.write('\npipusb was canceled by user\n')
     exit()
+
   except Exception as e:
     if args.notification:
       notification('An unexpected error has occurred, please notify the developer.', args.notification, msg=f'Error > {e}')
     else:
       stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
     exit()
+
 
 # Check script main
 if __name__ == '__main__':
