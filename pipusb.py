@@ -37,7 +37,7 @@ def notification(text, noti, sound="", icon="", msg=""):
 def main():
 
 # Defining name, use and definition
-  parser = argparse.ArgumentParser(prog = 'pipusb', formatter_class = argparse.RawDescriptionHelpFormatter, description = "PIPUSB")
+  parser = argparse.ArgumentParser(prog = 'pipusb', formatter_class = argparse.RawDescriptionHelpFormatter, description = "Pipusb is a console program (CLI), which notifies with a customizable sound the insertion or removal of a USB device. Pipusb is designed to be as light and efficient as possible.\nDeveloped by @VidalGB")
 
 # Version argument
   parser.add_argument('-v', '--version', action = 'version', version = '%(prog)s 1.0', help = "show program's version number and exit.")
@@ -61,7 +61,7 @@ def main():
   list_input = args.input.split('.')
   list_output = args.output.split('.')
   
-  if list_input[-1] == "wav" or list_output[-1] == "wav":
+  if list_input[-1] != "wav" or list_output[-1] != "wav":
     if args.notification:
       notification('file not supported, ".wav" files only', args.notification)
     else:
