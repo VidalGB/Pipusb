@@ -4,12 +4,21 @@
 # Imports
 import argparse
 from time import sleep
-from sys import stdout, exit
+import sys
+import os
 from notifypy import Notify
 from usb import busses
 from psutil import sensors_battery
 from pydub import AudioSegment
 from pydub.playback import play
+
+#Path search
+def path(relativePath):
+  try:
+    bacePath = sys._MEIPASS
+  except Exception:
+    bacePath = os.path.abspath(".")
+  return os.path.join(bacePath, relativePath)
 
 def list_devices():
   list_busses = busses()
@@ -25,12 +34,12 @@ def notification(text, noti, sound="", icon="", msg=""):
     notification = Notify(default_application_name="pipusb")
     notification.title = text
     if sound != "":
-      notification.audio = sound
-    notification.icon = icon
+      notification.audio = path(sound)
+    notification.icon = path(icon)
     notification.message = msg
     notification.send()
   else:
-    song = AudioSegment.from_wav(sound)
+    song = AudioSegment.from_wav(path(sound))
     play(song)
 
 # Main function
@@ -65,8 +74,8 @@ def main():
     if args.notification:
       notification('file not supported, ".wav" files only', args.notification)
     else:
-      stdout.write('file not supported, ".wav" files only\n')
-    exit()
+      sys.stdout.write('file not supported, ".wav" files only\n')
+    sys.exit()
     
   try:
     while True:
@@ -96,15 +105,15 @@ def main():
     if args.notification:
       notification("pipusb was canceled by user", args.notification)
     else:
-      stdout.write('\npipusb was canceled by user\n')
-    exit()
+      sys.stdout.write('\npipusb was canceled by user\n')
+    sys.exit()
 
   except Exception as e:
     if args.notification:
       notification('An unexpected error has occurred, please notify the developer.', args.notification, msg=f'Error > {e}')
     else:
-      stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
-    exit()
+      sys.stdout.write(f'An unexpected error has occurred, please notify the developer.\nError > {e}\n')
+    sys.exit()
 
 
 # Check script main
