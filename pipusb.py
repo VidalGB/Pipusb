@@ -1,7 +1,7 @@
-# Python v3.9.2 more information and dependencies, read requirements.txt
-#0 Syntax camelCase
+#Python v3.9.2 more information and dependencies, read requirements.txt
+#Syntax camelCase
 
-# Imports
+#Imports
 import argparse
 from time import sleep
 import sys
@@ -20,6 +20,7 @@ def path(relativePath):
     bacePath = os.path.abspath(".")
   return os.path.join(bacePath, relativePath)
 
+#List devices to coneccted for USB
 def list_devices():
   list_busses = busses()
   num_dev = int()
@@ -29,6 +30,7 @@ def list_devices():
 
   return num_dev
 
+#Function notification for play sound or sent notification
 def notification(text, noti, sound="", icon="", msg=""):
   if noti:
     notification = Notify(default_application_name="pipusb")
@@ -42,25 +44,25 @@ def notification(text, noti, sound="", icon="", msg=""):
     song = AudioSegment.from_wav(path(sound))
     play(song)
 
-# Main function
+#Main function
 def main():
 
-# Defining name, use and definition
+#Defining name, use and definition
   parser = argparse.ArgumentParser(prog = 'pipusb', formatter_class = argparse.RawDescriptionHelpFormatter, description = "Pipusb is a console program (CLI), which notifies with a customizable sound the insertion or removal of a USB device. Pipusb is designed to be as light and efficient as possible.\nDeveloped by @VidalGB")
 
-# Version argument
+#Version argument
   parser.add_argument('-v', '--version', action = 'version', version = '%(prog)s 1.0', help = "show program's version number and exit.")
 
-# Input sound
+#Input sound argument
   parser.add_argument("-i","--input", type = str, default = './default/default_sound.wav', help = "file to play when inserting USB. (only .wav files are supported)")
 
-# Output sound
+#Output sound argument
   parser.add_argument("-o", "--output", type = str, default = './default/default_sound.wav', help = "file to play when removing USB. (only .wav files are supported)")
 
-# dee
+#Charger detected argument
   parser.add_argument("-c", "--charger", action = 'store_true', help = 'detect charger.')
 
-# ede
+#Sent notification argument
   parser.add_argument("-n", "--notification", action = 'store_true', help = 'show notification on USB detection.')
   args = parser.parse_args()
   
@@ -116,6 +118,6 @@ def main():
     sys.exit()
 
 
-# Check script main
+#Check script main
 if __name__ == '__main__':
   main()
