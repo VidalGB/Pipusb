@@ -4,7 +4,7 @@ Pipusb is a *lightweight and easy-to-use* terminal program for Linux that monito
 
 ## Installation 
 
-Download pipusb on (releases)[https://github.com/VidalGB/Pipusb/releases]
+Download pipusb on [releases](https://github.com/VidalGB/Pipusb/releases)
 
 Then open the terminal with `Ctrol` + `Alt` + `T` and go to the download section:
 
@@ -63,4 +63,4 @@ and it will open compiled in the 'dist' folder the executable that you can place
 
 Pipusb was developed by **@VidalGB**
 
--> (Github)[https://github.com/VidalGB]
+-> [Github](https://github.com/VidalGB)
